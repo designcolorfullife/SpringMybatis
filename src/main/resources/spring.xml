@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <!--<property name="url" value="jdbc:mysql://mypay1.testdb.alipay.net:3306/zmhatcher?characterEncoding=GBK"/>-->
+        <property name="url" value="jdbc:mysql://localhost:3306/zmhatcher?characterEncoding=UTF-8"/>
+        <!--<property name="username" value="zmhatcher"/>-->
+        <!--<property name="password" value="ali88"/>-->
+        <property name="username" value="root"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:/Configuration.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">-->
+        <!--<constructor-arg index="0" ref="sqlSessionFactory"/>-->
+    <!--</bean>-->
+
+    <bean id="userDao" class="com.zhangwei.ibatis.model.UserDaoImpl">
+        <!--<property name="sqlSessionTemplate" ref="sqlSession"/>-->
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+</beans>

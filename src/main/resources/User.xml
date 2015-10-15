@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhangwei.ibatis.models.UserMapper">
+<resultMap type="User" id="resultListUser">
+        <id column="role_id" property="role_id" />
+        <result column="gmt_create" property="gmt_create" />
+        <result column="gmt_modified" property="gmt_modified" />
+        <result column="school_id" property="school_id" />
+        <result column="in_school" property="in_school" />
+        <result column="degree" property="degree" />
+        <result column="state" property="state" />
+        <result column="source" property="source" />
+        <result column="educate_date" property="educate_date" />
+        <result column="score" property="score" />
+    </resultMap>
+    <select id="selectUserByID" parameterType="String" resultType="User">
+        select * from `zm_sd_certify` where role_id = #{id}
+    </select>
+    <select id="selectUserByDate" parameterType="Date" resultType="User">
+    	select * from `zm_sd_certify`
+
+    </select>
+    <select id="selectUserSizeByDate" parameterType="Date" resultType="int">
+    	select count(*) from `zm_sd_certify` where gmt_modified <![CDATA[< #{date}]]>
+    </select>
+    <insert id="addUser">
+      			insert into zm_sd_certify(role_id,school_id,in_school,degree,educate_date,state,source,score,gmt_create,gmt_modified)
+      			values (#{role_id},#{school_id},#{in_school},#{degree}, #{educate_date}, #{state}, #{source},#{score},CURRENT_TIMESTAMP, CURRENT_TIMESTAMP )
+    </insert>
+    <update id="modifyUser" parameterType="User">
+        			UPDATE zm_sd_certify
+			SET school_id =#{school_id}, in_school =#{in_school}, degree =#{degree}, educate_date =#{educate_date},state =  #{state},source = #{source}, score=#{score}, gmt_modified = CURRENT_TIMESTAMP
+			WHERE
+				role_id =#{role_id}
+    </update>
+    <delete id="delUser" parameterType="User">
+        DELETE FROM zm_sd_certify WHERE role_id =#{role_id}
+    </delete>
+    <!--<update id="updateUser" parameterType="User"-->
+</mapper>
