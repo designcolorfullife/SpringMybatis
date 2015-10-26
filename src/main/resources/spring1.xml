@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop  
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd"
+        >
+    <bean id="digest" class="com.zhangwei.learning.utils.MethodDigest"/>
+    <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
+    <context:component-scan base-package="com.zhangwei"></context:component-scan>
+    <!-- 
+    <bean id="methodPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">  
+        <property name="mappedNames">  
+            <list>
+            	<value>Download</value>
+            	<value>invoke</value>
+            	<value>handle</value>  
+            </list>  
+        </property>  
+    </bean>
+<bean id="digestInterceptor" class="org.springframework.aop.support.DefaultPointcutAdvisor">  
+    <property name="pointcut" ref="methodPointcut"/>  
+    <property name="advice" ref="digest"/>  
+</bean>  
+<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+  <property name="interceptorNames">
+   <list>
+    <value>digest</value>
+   </list>
+  </property>
+  <property name="beanNames">
+   <list>
+    <value>*Server</value>
+    <value>*Handler</value>
+    <value>*Processor</value>
+    <value>*Factory</value>
+    <value>*Downloader</value>
+   </list>
+  </property>
+ </bean>
+     -->
+
+    <!--系统配置的注入-->
+    <bean id="configMap" class="com.zhangwei.learning.utils.ConfigMap">
+        <property name="properties" value="configs.properties"/>
+    </bean>
+    <!--bean的声明-->
+    <bean id="socketServer" class="com.zhangwei.learning.net.SocketServer" init-method="InitSocket">
+        <property name="socketHandler" ref="globalSocketRequestHandler"/>
+        <property name="configMap" ref="configMap"/>
+    </bean>
+    <bean id="globalSocketRequestHandler" class="com.zhangwei.learning.net.handler.GlobalSocketRequestHandler">
+        <property name="actionFactory" ref="actionFactory"/>
+    </bean>
+    <bean id="downLoadActionProcessor" class="com.zhangwei.learning.net.processor.DownLoadActionProcessor">
+        <property name="configMap" ref="configMap"/>
+        <property name="downloaderMap" ref="downloaderMap"/>
+    </bean>
+
+    <bean id="actionFactory" class="com.zhangwei.learning.net.factory.ActionFactoryImpl">
+        <property name="actionMap" ref="actionMap"/>
+    </bean>
+    <bean id="httpDownloader" class="com.zhangwei.learning.net.downloader.HttpDownloader"/>
+    <!-- 基本注入类型 -->
+    <util:map id="actionMap">
+        <entry key="DOWNLOAD" value-ref="downLoadActionProcessor"/>
+    </util:map>
+    <util:map id="downloaderMap">
+        <entry key="http" value-ref="httpDownloader"/>
+    </util:map>
+
+</beans>
