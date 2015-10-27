@@ -1,8 +1,7 @@
-package com.springapp.mvc;
+package com.zhangwei.mvc;
 
 import com.zhangwei.ibatis.model.User;
 import com.zhangwei.ibatis.model.dao.UserDao;
-import com.zhangwei.tools.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
